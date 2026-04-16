@@ -1,0 +1,90 @@
+# ============================================================
+# HISTORIQUE DES COMMANDES DOCKER - TP1
+# Auteur : Joseph
+# Cours  : Conduite de Projet (Agile, DevOps, Kanban) - CC1
+# ============================================================
+
+# -----------------------------------------------
+# ÉTAPE 1 : Se placer dans le répertoire du projet
+# -----------------------------------------------
+cd tp-docker/app
+
+# -----------------------------------------------
+# ÉTAPE 2 : Construire l'image Docker
+# Syntaxe : docker build -t <nom_image> <chemin>
+# -----------------------------------------------
+docker build -t joseph-flask-app .
+
+# -----------------------------------------------
+# ÉTAPE 3 : Vérifier que l'image a bien été créée
+# -----------------------------------------------
+docker images
+
+# Résultat attendu :
+# REPOSITORY          TAG       IMAGE ID       CREATED          SIZE
+# joseph-flask-app    latest    <id>           X seconds ago    ~1GB
+
+# -----------------------------------------------
+# ÉTAPE 4 : Exécuter le conteneur
+# -d   : mode détaché (arrière-plan)
+# -p   : mapping port hôte:conteneur
+# --name : nom du conteneur
+# -----------------------------------------------
+docker run -d -p 5000:5000 --name joseph-flask-container joseph-flask-app
+
+# -----------------------------------------------
+# ÉTAPE 5 : Vérifier que le conteneur tourne
+# -----------------------------------------------
+docker ps
+
+# Résultat attendu :
+# CONTAINER ID   IMAGE              COMMAND           STATUS    PORTS
+# <id>           joseph-flask-app   "python app.py"   Up        0.0.0.0:5000->5000/tcp
+
+# -----------------------------------------------
+# ÉTAPE 6 : Tester l'application dans le navigateur
+# URL : http://localhost:5000
+# -----------------------------------------------
+
+# -----------------------------------------------
+# ÉTAPE 7 : Voir les logs du conteneur
+# -----------------------------------------------
+docker logs joseph-flask-container
+
+# -----------------------------------------------
+# ÉTAPE 8 : Se connecter à DockerHub
+# -----------------------------------------------
+docker login
+
+# -----------------------------------------------
+# ÉTAPE 9 : Tagger l'image pour DockerHub
+# Format : docker tag <image_locale> <dockerhub_user>/<image>:<tag>
+# -----------------------------------------------
+docker tag joseph-flask-app josephndoumbe/joseph-flask-app:latest
+
+# -----------------------------------------------
+# ÉTAPE 10 : Pousser l'image sur DockerHub
+# -----------------------------------------------
+docker push josephndoumbe/joseph-flask-app:latest
+
+# -----------------------------------------------
+# COMMANDES UTILES SUPPLÉMENTAIRES
+# -----------------------------------------------
+
+# Arrêter le conteneur
+docker stop joseph-flask-container
+
+# Supprimer le conteneur
+docker rm joseph-flask-container
+
+# Supprimer l'image
+docker rmi joseph-flask-app
+
+# Lister tous les conteneurs (y compris arrêtés)
+docker ps -a
+
+# Inspecter le conteneur
+docker inspect joseph-flask-container
+
+# Accéder au shell du conteneur
+docker exec -it joseph-flask-container bash
